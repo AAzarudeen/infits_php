@@ -1,8 +1,5 @@
 <?php
-$server="127.0.0.1:4307";
-$username="root";
-$password="";
-$database = "infits";
+require "connect.php";
 
 $conn=mysqli_connect($server,$username,$password,$database);
 
@@ -21,7 +18,7 @@ $to = date('Y-m-d', strtotime('1 days', strtotime($today)));
 
 $clientID = "Azarudeen";
 
-$sql = "select cast(date as time),cast(date as date),maximum from heartrate where clientID='$clientID' AND cast(date as date) between '$from' and '$to' AND cast(date as time) IN (
+$sql = "select cast(date as time),cast(date as date),value from heartrate where clientID='$clientID' AND cast(date as date) between '$from' and '$to' AND cast(date as time) IN (
     SELECT MAX(cast(date as time)) 
     FROM heartrate
         
@@ -32,15 +29,15 @@ $sql = "select cast(date as time),cast(date as date),maximum from heartrate wher
 $result = mysqli_query($conn, $sql) or die("Error in Selecting " . mysqli_error($connection));
 
     $emparray = array();
+    $value = array();
     while($row =mysqli_fetch_assoc($result))
     {
-        $emparray['date'] = $row['cast(date as time)'];
-        $a = json_decode($row['maximum']);
-        $average = array_sum($a)/count($a);
+        $emparray['date'] = $row['cast(date as date)'];
+        array_push($value,$row['value']);
+        $average = array_sum($value)/count($value);
         $emparray['avg'] = $average;
-        $emparray['min'] = min($a);
-        $emparray['max'] = max($a);
-
+        $emparray['max'] = max($value);
+        $emparray['min'] = min($value);
         $full[] = $emparray;
     }
     echo json_encode(['heart' => $full]);

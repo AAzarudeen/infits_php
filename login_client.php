@@ -2,11 +2,11 @@
 
 require "connect.php";
 
-$user_name = $_POST["userID"];
-$user_pass = $_POST["password"];
+//$user_name = $_POST["userID"];
+//$user_pass = $_POST["password"];
 
-//$user_name = "Azarudeen";
-// $user_pass = "password";
+$user_name = "Azarudeen";
+$user_pass = "password";
 $sql = "select * from client where clientuserID=? and password=?";
 
 $stmt = $conn->stmt_init();
